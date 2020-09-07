@@ -1,0 +1,5 @@
+lumbercamp,d,y
+blacksmith,d,G
+go to blacksmith,\x07,l
+go to TC,Button.x1
+go to port,r
