@@ -1,2 +1,2 @@
 # ShortcutTrainer
-Trainer for shortcuts which are predefined in .csv file.
+Trainer for shortcuts in Python. Customize in csv-file.
