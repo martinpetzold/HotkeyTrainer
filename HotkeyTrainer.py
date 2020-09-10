@@ -14,8 +14,10 @@ class HotkeyTrainer():
     def __init__(self,hotkeyList):
         self.hotkeyList = hotkeyList
         self.window = tk.Tk()
-        self.duration = 50
+        self.duration = 25
         self.comboCount = 1
+        self.currQuest = ""
+        self.oldQuest = ""
         self.window.title("Hotkey-Trainer")
         fontStyle = tkFont.Font(family="Lucida Grande", size=12)
         frame = tk.Frame(master=self.window, width=400, height=300)
@@ -33,13 +35,13 @@ class HotkeyTrainer():
         #Build2: Create start button
         button = tk.Button(
             text="start",
-            width=10,
+            width=30,
             height=2,
             bg="white",
             fg="black",
             font=fontStyle,
             command=self.start)
-        button.place(x=100,y=200)
+        button.place(x=50,y=200)
         self.timerRunning = False
         
         #Build3: Create Timer
@@ -53,10 +55,10 @@ class HotkeyTrainer():
         #Build3: Create Question
         self.question = tk.StringVar()
         self.question.set(str("-"))
-        scoreLabel = tk.Label(master=frame,text="Combo:",width=12,bg="white", font=fontStyle)
-        scoreLabel.place(x=20,y=120)
-        scoreLabel = tk.Label(master=frame,textvariable=self.question,width=22,bg="white", font=fontStyle)
-        scoreLabel.place(x=160,y=120)
+        self.questLabel = tk.Label(master=frame,text="Combo:",width=12,bg="white", font=fontStyle)
+        self.questLabel.place(x=20,y=120)
+        self.questLabel = tk.Label(master=frame,textvariable=self.question,width=22,bg="white", font=fontStyle)
+        self.questLabel.place(x=160,y=120)
 
         #Config Keboard/Mouse Listener
         def on_press(key):
@@ -91,13 +93,18 @@ class HotkeyTrainer():
     def checkInput(self,inputVal):
         if self.timerRunning == True:
             if not str(inputVal) == "'" + self.currQuest[self.comboCount] + "'":
+                self.questLabel.configure(bg = "#FF3030") # red
+                time.sleep(0.1)
+                self.questLabel.configure(bg = "white")
                 print("Combo Incorrect")
                 self.newQuest()
-            else:
-                
+            else: 
                 self.score.set(str(self.scoreVal))
                 self.comboCount += 1
                 if self.comboCount > len(self.currQuest)-1:
+                    self.questLabel.configure(bg = "#00EE76") # green
+                    time.sleep(0.1)
+                    self.questLabel.configure(bg = "white")
                     self.scoreVal += 1
                     self.score.set(str(self.scoreVal))
                     print("Combo Correct")
@@ -107,11 +114,13 @@ class HotkeyTrainer():
         print("Game Over");
 
     def newQuest(self):
-        self.currQuest = random.choice(self.hotkeyList)
-        self.question.set(str(self.currQuest[0]))
-        self.comboCount = 1
-        print(self.currQuest)
-        
+        self.oldQuest = self.currQuest
+        while self.currQuest == self.oldQuest:
+            self.currQuest = random.choice(self.hotkeyList)
+            self.question.set(str(self.currQuest[0]))
+            self.comboCount = 1
+            print(self.currQuest)        
+            
 def timer(refObj):
     while refObj.currTime>=0:
         refObj.timer.set(str(refObj.currTime))
